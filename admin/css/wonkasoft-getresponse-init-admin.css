@@ -1,0 +1,9 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+
+body.wonkasoft-tools_page_wonkasoft-tools-options #wpbody-content .container {
+	margin: 0;
+    padding: 15px;
+}
