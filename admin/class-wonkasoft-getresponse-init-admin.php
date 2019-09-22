@@ -397,4 +397,12 @@ class Wonkasoft_Getresponse_Init_Admin {
 		endif;
 	}
 
+	/**
+	 * This initiates the action link on the plugin screen.
+	 */
+	public function wonkasoft_init_plugin_screen_action_link() {
+		add_filter( 'plugin_action_links_' . WONKASOFT_GETRESPONSE_INIT_BASENAME, 'wonkasoft_getresponse_init_add_settings_link_filter', 10, 1 );
+		add_filter( 'plugin_row_meta', 'wonkasoft_getresponse_init_add_description_link_filter', 10, 2 );
+	}
+
 }

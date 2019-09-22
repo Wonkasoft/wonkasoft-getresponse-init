@@ -171,6 +171,7 @@ class Wonkasoft_Getresponse_Init {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'wonkasoft_getresponse_init_admin_menu' );
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'wonkasoft_init_plugin_screen_action_link' );
 
 	}
 

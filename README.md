@@ -1,4 +1,5 @@
-x=== Wonkasoft GetResponse Integration ===
+=== Wonkasoft GetResponse Integration ===
+
 Contributors: mrlister1, llister, Wonkasoft
 Donate link: https://paypal.me/Wonkasoft
 Tags: GetResponse, email, campaigns, Social, wonkasoft
