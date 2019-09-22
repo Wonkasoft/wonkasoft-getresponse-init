@@ -119,6 +119,8 @@ class Wonkasoft_Getresponse_Init_Admin {
 				100
 			);
 
+			$this->wonkasoft_tools_add_options();
+
 			add_submenu_page(
 				'wonkasoft_menu',
 				WONKASOFT_GETRESPONSE_INIT_NAME,
@@ -128,7 +130,6 @@ class Wonkasoft_Getresponse_Init_Admin {
 				array( $this, 'wonkasoft_getresponse_init_settings_display' )
 			);
 
-			$this->wonkasoft_tools_add_options();
 			add_action( 'admin_enqueue_scripts', array( $this, 'wonkasoft_tools_options_js' ), 10, 1 );
 
 		} else {
