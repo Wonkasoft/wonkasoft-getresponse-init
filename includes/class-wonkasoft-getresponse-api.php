@@ -110,7 +110,7 @@ class Wonkasoft_GetResponse_Api {
 		$payload = json_encode( $payload );
 
 		$ch  = curl_init();
-		$url = $this->getresponse_api . '/contacts/' . $this->contact_id;
+		$url = $this->getresponse_url . '/contacts/' . $this->contact_id;
 		curl_setopt( $ch, CURLOPT_URL, $url );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, $this->post_header );

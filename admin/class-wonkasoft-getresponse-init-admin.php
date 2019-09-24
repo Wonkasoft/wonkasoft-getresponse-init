@@ -100,7 +100,7 @@ class Wonkasoft_Getresponse_Init_Admin {
 	}
 
 	/**
-	 * This sets up the admin menu for Wonkasoft Refersion Integration.
+	 * This sets up the admin menu for Wonkasoft Admin Integration.
 	 */
 	public function wonkasoft_getresponse_init_admin_menu() {
 		/**
@@ -108,45 +108,33 @@ class Wonkasoft_Getresponse_Init_Admin {
 		*/
 		global $wonkasoft_getresponse_init_page;
 		if ( empty( $GLOBALS['admin_page_hooks']['wonkasoft_menu'] ) ) {
-			$wonkasoft_getresponse_init_page = 'wonkasoft_menu';
 			add_menu_page(
-				'Wonkasoft',
-				'Wonkasoft Tools',
+				'Wonkasoft Tools Options',
+				'Tools Options',
 				'manage_options',
 				'wonkasoft_menu',
-				array( $this, 'wonkasoft_getresponse_init_settings_display' ),
+				array( $this, 'wonkasoft_tools_options_page' ),
 				WONKASOFT_GETRESPONSE_INIT_IMG_PATH . '/wonka-logo-2.svg',
 				100
 			);
 
 			$this->wonkasoft_tools_add_options();
-
-			add_submenu_page(
-				'wonkasoft_menu',
-				WONKASOFT_GETRESPONSE_INIT_NAME,
-				WONKASOFT_GETRESPONSE_INIT_NAME,
-				'manage_options',
-				$wonkasoft_getresponse_init_page,
-				array( $this, 'wonkasoft_getresponse_init_settings_display' )
-			);
-
 			add_action( 'admin_enqueue_scripts', array( $this, 'wonkasoft_tools_options_js' ), 10, 1 );
-
-		} else {
-
-			/**
-			* This creates option page in the settings tab of admin menu
-			*/
-			$wonkasoft_getresponse_init_page = 'wonkasoft_getresponse_init_settings_display';
-			add_submenu_page(
-				'wonkasoft_menu',
-				WONKASOFT_GETRESPONSE_INIT_NAME,
-				WONKASOFT_GETRESPONSE_INIT_NAME,
-				'manage_options',
-				$wonkasoft_getresponse_init_page,
-				array( $this, 'wonkasoft_getresponse_init_settings_display' )
-			);
+			add_action( 'wp_ajax_nopriv_wonkasoft_plugins_ajax_requests', array( $this, 'wonkasoft_plugins_ajax_requests' ) );
+			add_action( 'wp_ajax_wonkasoft_plugins_ajax_requests', array( $this, 'wonkasoft_plugins_ajax_requests' ) );
 		}
+		/**
+		* This creates option page in the settings tab of admin menu
+		*/
+		$wonkasoft_getresponse_init_page = 'wonkasoft_getresponse_init_settings_display';
+		add_submenu_page(
+			'wonkasoft_menu',
+			WONKASOFT_GETRESPONSE_INIT_NAME,
+			WONKASOFT_GETRESPONSE_INIT_NAME,
+			'manage_options',
+			$wonkasoft_getresponse_init_page,
+			array( $this, 'wonkasoft_getresponse_init_settings_display' )
+		);
 
 	}
 
@@ -161,14 +149,6 @@ class Wonkasoft_Getresponse_Init_Admin {
 	 * Addition of apera-bags theme options.
 	 */
 	public function wonkasoft_tools_add_options() {
-		add_submenu_page(
-			'wonkasoft_menu',
-			'Tools Options',
-			'Tools Options',
-			'manage_options',
-			'wonkasoft-tools-options',
-			array( $this, 'wonkasoft_tools_options_page' )
-		);
 
 		$registered_options = ( ! empty( get_option( 'custom_options_added' ) ) ) ? get_option( 'custom_options_added' ) : '';
 
@@ -201,7 +181,9 @@ class Wonkasoft_Getresponse_Init_Admin {
 			/**
 			 * This builds the display of the options page.
 			 */
-	public function wonkasoft_tools_options_page() {   ?>
+	public function wonkasoft_tools_options_page() {
+		if ( is_admin() ) {
+			?>
 					<div class="container">
 						<div class="row">
 							<div class="col-12 title-column">
@@ -215,8 +197,8 @@ class Wonkasoft_Getresponse_Init_Admin {
 							<div class="col-12 options column">
 								<div class="card w-100">
 									<div class="card-title">
-										<h3><?php esc_html_e( 'Add an option', 'Wonkasoft_Refersion_Init' ); ?></h3>
-										<button type="button" id="theme_option_add" class="wonka-btn" data-toggle="modal" data-target="#add_option_modal">OPTION <i class="fa fa-plus"></i></button>
+										<h3><?php esc_html_e( 'Add an option', 'Wonkasoft_Getresponse_Init' ); ?></h3>
+										<button type="button" id="wonkasoft_option_add" class="wonka-btn" data-toggle="modal" data-target="#add_option_modal">Option <i class="fa fa-plus"></i></button>
 									</div>
 									<div class="card-body">
 								<form id="custom-options-form" method="post" action="options.php">
@@ -295,6 +277,7 @@ class Wonkasoft_Getresponse_Init_Admin {
 						</div>
 					</div>
 				<?php
+		}
 	}
 
 		/**
@@ -385,7 +368,7 @@ class Wonkasoft_Getresponse_Init_Admin {
 	 */
 	public function wonkasoft_tools_options_js( $page ) {
 
-		if ( 'wonkasoft-tools_page_wonkasoft-tools-options' === $page ) :
+		if ( 'toplevel_page_wonkasoft_menu' === $page || 'wonkasoft_menu' === $page ) :
 			wp_enqueue_style( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', array(), '4.3.1', 'all' );
 
 			wp_style_add_data( 'bootstrap', array( 'integrity', 'crossorigin' ), array( 'sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', 'anonymous' ) );
@@ -394,7 +377,7 @@ class Wonkasoft_Getresponse_Init_Admin {
 
 			wp_script_add_data( 'bootstrapjs', array( 'integrity', 'crossorigin' ), array( 'sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM', 'anonymous' ) );
 
-			wp_enqueue_script( 'wonkasoft-tools-options-js', str_replace( array( 'http:', 'https:' ), '', get_stylesheet_directory_uri() . '/includes/js/wonkasoft-tools-options-js.js' ), array( 'jquery' ), '20190819', true );
+			wp_enqueue_script( 'wonkasoft-tools-options-js', WONKASOFT_GETRESPONSE_INIT_URL . '/includes/js/wonkasoft-tools-options-js.js', array( 'jquery' ), '20190819', true );
 		endif;
 	}
 
@@ -404,6 +387,13 @@ class Wonkasoft_Getresponse_Init_Admin {
 	public function wonkasoft_init_plugin_screen_action_link() {
 		add_filter( 'plugin_action_links_' . WONKASOFT_GETRESPONSE_INIT_BASENAME, 'wonkasoft_getresponse_init_add_settings_link_filter', 10, 1 );
 		add_filter( 'plugin_row_meta', 'wonkasoft_getresponse_init_add_description_link_filter', 10, 2 );
+	}
+
+	/**
+	 * This function is the callback ajax requests for this wonkasoft tools.
+	 */
+	public function wonkasoft_plugins_ajax_requests() {
+		include_once plugin_dir_path( __FILE__ ) . 'partials/wonkasoft-plugins-ajax.php';
 	}
 
 }

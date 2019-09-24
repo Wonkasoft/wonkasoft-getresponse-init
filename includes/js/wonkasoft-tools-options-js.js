@@ -2,10 +2,10 @@
 {
   window.onload = function() 
   {
-    if ( document.querySelector( '#theme_option_add' ) ) 
+    if ( document.querySelector( '#wonkasoft_option_add' ) ) 
     {
       var option_add_btn = document.querySelector( '#add_option_name' );
-      var open_modal_btn = document.querySelector( '#theme_option_add' );
+      var open_modal_btn = document.querySelector( '#wonkasoft_option_add' );
       var new_option_name_input = document.querySelector( '#new_option_name' );
       var new_option_description_input = document.querySelector( '#new_option_description' );
       var new_option_api_input = document.querySelector( '#new_option_api' );
@@ -13,7 +13,7 @@
       var options_form = document.querySelector( '#custom-options-form' );
       var security = document.querySelector( '#new_option_nonce' );
       var data = {};
-      var action = 'theme_options_ajax_post';
+      var action = 'wonkasoft_options_ajax_post';
       var xhr = new XMLHttpRequest();
 
       
