@@ -110,12 +110,21 @@ class Wonkasoft_Getresponse_Init_Admin {
 		if ( empty( $GLOBALS['admin_page_hooks']['wonkasoft_menu'] ) ) {
 			add_menu_page(
 				'Wonkasoft Tools Options',
-				'Tools Options',
+				'Wonkasoft',
 				'manage_options',
 				'wonkasoft_menu',
 				array( $this, 'wonkasoft_tools_options_page' ),
 				WONKASOFT_GETRESPONSE_INIT_IMG_PATH . '/wonka-logo-2.svg',
 				100
+			);
+
+			add_submenu_page(
+				'wonkasoft_menu',
+				'Wonkasoft Tools Options',
+				'Tools Options',
+				'manage_options',
+				'wonkasoft_menu',
+				array( $this, 'wonkasoft_tools_options_page' ),
 			);
 
 			$this->wonkasoft_tools_add_options();
@@ -184,7 +193,9 @@ class Wonkasoft_Getresponse_Init_Admin {
 	public function wonkasoft_tools_options_page() {
 		if ( is_admin() ) {
 			?>
-					<div class="container">
+				<div id="wonkasoft-tools-options">
+					
+					<div class="container-fluid">
 						<div class="row">
 							<div class="col-12 title-column">
 								<?php
@@ -276,6 +287,8 @@ class Wonkasoft_Getresponse_Init_Admin {
 							</div>
 						</div>
 					</div>
+				
+				</div><!-- #wonkasoft-tools-options -->
 				<?php
 		}
 	}
@@ -368,7 +381,7 @@ class Wonkasoft_Getresponse_Init_Admin {
 	 */
 	public function wonkasoft_tools_options_js( $page ) {
 
-		if ( 'toplevel_page_wonkasoft_menu' === $page || 'wonkasoft_menu' === $page ) :
+		if ( preg_match( '/[wonkasoft]/', $page ) ) :
 			wp_enqueue_style( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', array(), '4.3.1', 'all' );
 
 			wp_style_add_data( 'bootstrap', array( 'integrity', 'crossorigin' ), array( 'sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', 'anonymous' ) );
@@ -377,7 +390,7 @@ class Wonkasoft_Getresponse_Init_Admin {
 
 			wp_script_add_data( 'bootstrapjs', array( 'integrity', 'crossorigin' ), array( 'sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM', 'anonymous' ) );
 
-			wp_enqueue_script( 'wonkasoft-tools-options-js', WONKASOFT_GETRESPONSE_INIT_URL . '/includes/js/wonkasoft-tools-options-js.js', array( 'jquery' ), '20190819', true );
+			wp_enqueue_script( 'wonkasoft-tools-options-js', WONKASOFT_PLUGIN_URL . 'includes/js/wonkasoft-tools-options-js.js', array( 'jquery' ), '20190819', true );
 		endif;
 	}
 

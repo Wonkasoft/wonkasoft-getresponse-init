@@ -5,14 +5,14 @@
  * @link       https://wonkasoft.com
  * @since      1.0.0
  *
- * @package    Wonkasoft_Getresponse_Init
- * @subpackage Wonkasoft_Getresponse_Init/admin/partials
+ * @package    Wonkasoft_Bbb_Integration
+ * @subpackage Wonkasoft_Bbb_Integration/admin/partials
  */
 
 if ( isset( $_POST['wonkasoft_tools_options'] ) ) {
 	$nonce = ( isset( $_REQUEST['security'] ) ) ? wp_kses_post( wp_unslash( $_REQUEST['security'] ) ) : null;
 	// Check if nonce is valid.
-	if ( ! wp_verify_nonce( $nonce, 'theme_options_ajax_post' ) ) {
+	if ( ! wp_verify_nonce( $nonce, 'wonkasoft_tools_options_ajax_post' ) ) {
 		die( esc_html__( 'nonce failed', 'aperabags' ) );
 	}
 
@@ -35,7 +35,7 @@ if ( isset( $_POST['wonkasoft_tools_options'] ) ) {
 			endif;
 		endforeach;
 		delete_option( $data->option_id );
-		unregister_setting( 'aperabags-theme-options-group', $data->option_id );
+		unregister_setting( 'wonkasoft-tools-options-group', $data->option_id );
 		$data->current_options = $current_options;
 		update_option( 'custom_options_added', $current_options );
 		$data->msg = $data->option_id . ' option was deleted, unregistered as a setting, and the database has been updated.';
@@ -57,10 +57,10 @@ if ( isset( $_POST['wonkasoft_tools_options'] ) ) {
 				$set_args = array(
 					'type'              => 'string',
 					'description'       => $data->option_description,
-					'sanitize_callback' => 'aperabags_options_sanitize',
+					'sanitize_callback' => array( 'Wonkasoft_Bbb_Integration_Admin', 'wonkasoft_tools_options_sanitize' ),
 					'show_in_rest'      => false,
 				);
-				register_setting( 'aperabags-theme-options-group', $data->option_name, $set_args );
+				register_setting( 'wonkasoft-tools-options-group', $data->option_name, $set_args );
 				update_option( 'custom_options_added', $current_options );
 				$data->current_options = $current_options;
 

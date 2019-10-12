@@ -13,7 +13,7 @@
       var options_form = document.querySelector( '#custom-options-form' );
       var security = document.querySelector( '#new_option_nonce' );
       var data = {};
-      var action = 'wonkasoft_options_ajax_post';
+      var action = 'wonkasoft_plugins_ajax_requests';
       var xhr = new XMLHttpRequest();
 
       
@@ -45,11 +45,18 @@
           }
           if ( '' !== new_option_name_input.value && '' !== new_option_description_input.value ) 
           {
-            data.option_name = new_option_name_input.value;
-            data.option_description = new_option_description_input.value;
-            data.option_label = new_option_name_input.value;
-            data.option_api = new_option_api_input.value;
-            data.remove = false;
+            data = {
+              'action': action,
+              'option_name': new_option_name_input.value,
+              'option_description': new_option_description_input.value,
+              'option_label': new_option_name_input.value,
+              'option_api': new_option_api_input.value,
+              'wonkasoft_tools_options': true,
+              'ajax_type': 'POST',
+              'remove': false,
+              'security': security.value
+            };
+            var query_string = Object.keys( data ).map( function( key ) { return key + '=' + data[key]; }).join( '&' );
             new_option_name_input.value = '';
             new_option_description_input.value = '';
             new_option_api_input.value = '';
@@ -58,6 +65,7 @@
                   if ( this.responseText && 'nonce failed' !== this.responseText ) 
                   {
                     var response = JSON.parse( this.responseText );
+                    console.log( response );
                     options_form.insertAdjacentHTML( 'beforeend', response.data.new_elements );
                     options_form.append( options_form.querySelector( '.submitter' ) );
                     load_remove_btn_event_listeners();
@@ -66,13 +74,34 @@
               };
             xhr.open("POST", ajaxurl, true );
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send( 'action=' + action + '&data=' + JSON.stringify( data ) + '&security=' + security.value );
+            xhr.send( query_string );
 
           }
         });
     }
 
     load_remove_btn_event_listeners();
+
+    if ( document.querySelector( '.wonkasoft-plugin-settings' ) ) 
+    {
+      $('#wonkasoft-plugin-tabs a').on('click', function (e) 
+      {
+        e.preventDefault();
+        $(this).tab('show');
+      });
+
+      $( '#copy-code' ).click( function( e ) 
+      {
+        e.preventDefault();
+        var target = document.getElementById( 'plugin-name' );
+        target.disabled = false;
+        target.select();
+        target.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        target.disabled = true;
+        console.log( target.value );
+      });
+    }
     
     function load_remove_btn_event_listeners() 
     {
@@ -88,8 +117,17 @@
           } 
           if ( target.id.includes( 'remove' ) ) 
           {
+            data = {
+              'action': action,
+              'remove': true,
+              'option_id': target.id.replace( 'remove-', '' ),
+              'wonkasoft_tools_options': true,
+              'ajax_type': 'POST',
+              'security': security.value
+            };
             data.remove = true;
             data.option_id = target.id.replace( 'remove-', '' );
+            var query_string = Object.keys( data ).map( function( key ) { return key + '=' + data[key]; }).join( '&' );
             xhr.onreadystatechange = function() {
                 if ( this.readyState == 4 && this.status == 200 ) {
                   var response = JSON.parse( this.responseText );
@@ -98,7 +136,7 @@
               };
             xhr.open("POST", ajaxurl, true );
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send( 'action=' + action + '&data=' + JSON.stringify( data ) + '&security=' + security.value );
+            xhr.send( query_string );
           }
         };
       });
